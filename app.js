@@ -1,6 +1,8 @@
 const express=require('express');
 const app=express();
 const morgan=require('morgan') // middleware to handle log , use next // show log in console
+const bodyParser=require('body-parser');
+
 const ProductRouter=require('./api/routes/products');
 const orderRouter=require('./api/routes/orders');
 
@@ -10,6 +12,20 @@ const orderRouter=require('./api/routes/orders');
 // 	});
 // });
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
+
+//CORS 
+app.use((req,res,next) => {
+	res.header("Access-Control-Allow-Origin","*");
+	res.header("Access-Control-Allow-Headers","Origin,X-Requested-With, Content-Type, Accept, Authorization");
+
+	if(req.method==="OPTIONS"){
+		res.header("Access-Control-Allow-Methods","PUT,POST,PATCH,DELETE,GET");
+		return res.status(200).json({});
+	}
+	next();
+});
 app.use('/products',ProductRouter);
 app.use('/orders',orderRouter);
  //This line is approach if the url does not matches the above 2 lines
