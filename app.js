@@ -5,6 +5,7 @@ const bodyParser=require('body-parser');
 
 const ProductRouter=require('./api/routes/products');
 const orderRouter=require('./api/routes/orders');
+const mongoose=require('mongoose');
 
 // app.use((req,res,next) => {
 // 	res.status(200).json({
@@ -14,6 +15,9 @@ const orderRouter=require('./api/routes/orders');
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+mongoose.connect('mongodb+srv://node-shop:'+process.env.MONGO_ATLAS_PWD+'@node-rest-shop-vuldw.mongodb.net/test?retryWrites=true',{
+	 useNewUrlParser: true 
+});
 
 //CORS 
 app.use((req,res,next) => {
