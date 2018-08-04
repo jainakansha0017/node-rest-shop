@@ -4,9 +4,17 @@ const mongoose=require('mongoose');
 const Product=require('../model/product')
 
 router.get('/',(req,res,next) => {
-	res.status(200).json({
-		message :"Handling GET request to /products"
-	});
+	Product.find()
+		   .exec()
+		   .then(doc => {
+		   		console.log(doc);
+		   		res.status(200).json(doc);
+		   })
+		   .catch(err => {
+		   		res.status(500).json({
+		   			error : err
+		   		});
+		   });
 });
 
 router.post('/',(req,res,next) => {
@@ -78,15 +86,41 @@ router.get("/:ProductId",(req,res,next) => {
  });
 
 router.patch('/:ProductId',(req,res,next) => {
-	res.status(200).json({
-		message :"Updating Product: "+req.params.ProductId
-	});
+	const updateOps={};
+	for( const ops of req.body )
+	{
+		updateOps[ops.PropName]=ops.value
+	}
+	console.log(updateOps)
+	Product.update({_id : req.params.ProductId},{$set : updateOps})
+		   .exec()
+		   .then(result => {
+			   	res.status(200).json(result);
+			   })
+		   .catch(err => {
+		   	res.status(500).json({
+		   		error : err
+		   	})
+		   })
+	// res.status(200).json({
+	// 	message :"Updating Product: "+req.params.ProductId
+	// });
 });
 
 router.delete('/:ProductId',(req,res,next) => {
-	res.status(200).json({
-		message :"Deleting Product: "+req.params.ProductId
-	});
+
+	Product.remove({_id:req.params.ProductId})
+		    .exec()
+		    .then(result => {
+		    	res.status(200).json(result);
+		    })
+		    .catch(err => {
+		    	console.log(err)
+		    	res.status(500).json({
+		    		error : err
+		    	})
+		    });
+	
 });
 
 
