@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb+srv://node-shop:'+process.env.MONGO_ATLAS_PWD+'@node-rest-shop-vuldw.mongodb.net/test?retryWrites=true',{
 	 useNewUrlParser: true 
 });
+mongoose.Promise=global.Promise;
 
 //CORS 
 app.use((req,res,next) => {
